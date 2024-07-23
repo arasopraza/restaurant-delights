@@ -1,6 +1,8 @@
 from django.shortcuts import redirect
 
 from django.db.models import Sum
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import logout
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView, UpdateView
 
@@ -8,7 +10,7 @@ from .models import Ingredient, MenuItem, Purchase, RecipeRequirement
 from .forms import IngredientForm, MenuItemForm, RecipeRequirementForm
 
 # Create your views here.
-class HomeView(TemplateView):
+class HomeView(LoginRequiredMixin, TemplateView):
   template_name = "restaurant/home.html"
 
   def get_context_data(self, **kwargs):
@@ -18,39 +20,39 @@ class HomeView(TemplateView):
         context["purchases"] = Purchase.objects.all()
         return context
 
-class IngredientsView(ListView):
+class IngredientsView(LoginRequiredMixin, ListView):
   template_name="restaurant/ingredients.html"
   model = Ingredient
 
-class AddIngredientsView(CreateView):
+class AddIngredientsView(LoginRequiredMixin, CreateView):
   template_name="restaurant/add_ingredients.html"
   model = Ingredient
   form_class = IngredientForm
 
-class UpdateIngredientView(UpdateView):
+class UpdateIngredientView(LoginRequiredMixin, UpdateView):
     template_name = "restaurant/update_ingredient.html"
     model = Ingredient
     form_class = IngredientForm
 
-class MenuView(ListView):
+class MenuView(LoginRequiredMixin, ListView):
   template_name="restaurant/menu.html"
   model = MenuItem
 
-class AddMenuItemView(CreateView):
+class AddMenuItemView(LoginRequiredMixin, CreateView):
   template_name="restaurant/add_menu_item.html"
   model = MenuItem
   form_class = MenuItemForm
 
-class AddRecipeRequirementView(CreateView):
+class AddRecipeRequirementView(LoginRequiredMixin, CreateView):
   template_name="restaurant/add_recipe_requirement.html"
   model = RecipeRequirement
   form_class = RecipeRequirementForm
 
-class PurchasesView(ListView):
+class PurchasesView(LoginRequiredMixin, ListView):
   template_name="restaurant/purchases.html"
   model = Purchase
 
-class AddPurchaseView(TemplateView):
+class AddPurchaseView(LoginRequiredMixin, TemplateView):
   template_name="restaurant/add_purchase.html"
 
   def get_context_data(self, **kwargs):
@@ -72,7 +74,7 @@ class AddPurchaseView(TemplateView):
     purchase.save()
     return redirect("/purchases")
 
-class ReportView(TemplateView):
+class ReportView(LoginRequiredMixin, TemplateView):
   template_name = "restaurant/reports.html"
 
   def get_context_data(self, **kwargs):
@@ -91,3 +93,7 @@ class ReportView(TemplateView):
     context["profit"] = revenue - total_cost
 
     return context
+
+def log_out(request):
+    logout(request)
+    return redirect("/")
