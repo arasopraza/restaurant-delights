@@ -2,7 +2,7 @@ from django.shortcuts import redirect
 
 from django.db.models import Sum
 from django.views.generic import TemplateView, ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 
 from .models import Ingredient, MenuItem, Purchase, RecipeRequirement
 from .forms import IngredientForm, MenuItemForm, RecipeRequirementForm
@@ -26,6 +26,11 @@ class AddIngredientsView(CreateView):
   template_name="restaurant/add_ingredients.html"
   model = Ingredient
   form_class = IngredientForm
+
+class UpdateIngredientView(UpdateView):
+    template_name = "restaurant/update_ingredient.html"
+    model = Ingredient
+    form_class = IngredientForm
 
 class MenuView(ListView):
   template_name="restaurant/menu.html"
