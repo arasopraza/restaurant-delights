@@ -1,5 +1,5 @@
 from django import forms
-from .models import Ingredient, MenuItem
+from .models import Ingredient, MenuItem, RecipeRequirement
 
 class IngredientForm(forms.ModelForm):
     class Meta:
@@ -9,4 +9,9 @@ class IngredientForm(forms.ModelForm):
 class MenuItemForm(forms.ModelForm):
     class Meta:
         model = MenuItem
+        fields = "__all__"
+
+class RecipeRequirementForm(forms.ModelForm):
+    class Meta:
+        model = RecipeRequirement
         fields = "__all__"
