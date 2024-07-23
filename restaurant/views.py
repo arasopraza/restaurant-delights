@@ -1,6 +1,6 @@
 from django.shortcuts import redirect
 
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 
 from .models import Ingredient, MenuItem, Purchase
 
@@ -14,3 +14,7 @@ class HomeView(TemplateView):
         context["menu_items"] = MenuItem.objects.all()
         context["purchases"] = Purchase.objects.all()
         return context
+
+class IngredientsView(ListView):
+  template_name="restaurant/ingredients.html"
+  model = Ingredient
