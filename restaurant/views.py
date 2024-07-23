@@ -22,3 +22,7 @@ class IngredientsView(ListView):
 class MenuView(ListView):
   template_name="restaurant/menu.html"
   model = MenuItem
+
+class PurchasesView(ListView):
+  template_name="restaurant/purchases.html"
+  model = Purchase
