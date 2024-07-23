@@ -45,10 +45,27 @@ class PurchasesView(ListView):
   template_name="restaurant/purchases.html"
   model = Purchase
 
-class AddPurchaseView(CreateView):
+class AddPurchaseView(TemplateView):
   template_name="restaurant/add_purchase.html"
-  model = Purchase
-  form_class = PurchaseForm  
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context["menu_items"] = [X for X in MenuItem.objects.all() if X.available()]
+    return context
+  
+  def post(self, request):
+    menu_item_id = request.POST["menu_item"]
+    menu_item = MenuItem.objects.get(pk=menu_item_id)
+    requirements = menu_item.reciperequirement_set
+    purchase = Purchase(menu_item=menu_item)
+
+    for requirement in requirements.all():
+      required_ingredient = requirement.ingredient
+      required_ingredient.quantity -= requirement.quantity
+      required_ingredient.save()
+    
+    purchase.save()
+    return redirect("/purchases")
 
 class ReportView(TemplateView):
   template_name = "restaurant/reports.html"
