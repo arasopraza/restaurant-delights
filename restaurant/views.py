@@ -1,10 +1,11 @@
 from django.shortcuts import redirect
 
+from django.db.models import Sum
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView
 
 from .models import Ingredient, MenuItem, Purchase, RecipeRequirement
-from .forms import IngredientForm, MenuItemForm, RecipeRequirementForm, PurchaseForm
+from .forms import IngredientForm, MenuItemForm, RecipeRequirementForm
 
 # Create your views here.
 class HomeView(TemplateView):
@@ -48,3 +49,23 @@ class AddPurchaseView(CreateView):
   template_name="restaurant/add_purchase.html"
   model = Purchase
   form_class = PurchaseForm  
+
+class ReportView(TemplateView):
+  template_name = "restaurant/reports.html"
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context["purchases"] = Purchase.objects.all()
+    revenue = Purchase.objects.aggregate(
+      revenue=Sum('menu_item__price'))["revenue"]
+    total_cost = 0
+
+    for purchase in Purchase.objects.all():
+      for recipe_requirement in purchase.menu_item.reciperequirement_set.all():
+        total_cost += recipe_requirement.ingredient.unit_price * recipe_requirement.quantity
+    
+    context["revenue"] = revenue
+    context["total_cost"] = total_cost
+    context["profit"] = revenue - total_cost
+
+    return context
