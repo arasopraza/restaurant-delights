@@ -18,3 +18,7 @@ class HomeView(TemplateView):
 class IngredientsView(ListView):
   template_name="restaurant/ingredients.html"
   model = Ingredient
+
+class MenuView(ListView):
+  template_name="restaurant/menu.html"
+  model = MenuItem
