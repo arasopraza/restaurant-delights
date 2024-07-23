@@ -1,8 +1,10 @@
 from django.shortcuts import redirect
 
 from django.views.generic import TemplateView, ListView
+from django.views.generic.edit import CreateView
 
 from .models import Ingredient, MenuItem, Purchase
+from .forms import IngredientForm
 
 # Create your views here.
 class HomeView(TemplateView):
@@ -18,6 +20,11 @@ class HomeView(TemplateView):
 class IngredientsView(ListView):
   template_name="restaurant/ingredients.html"
   model = Ingredient
+
+class AddIngredientsView(CreateView):
+  template_name="restaurant/add_ingredients.html"
+  model = Ingredient
+  form_class = IngredientForm
 
 class MenuView(ListView):
   template_name="restaurant/menu.html"
