@@ -8,5 +8,6 @@ urlpatterns = [
   path('ingredients/', views.IngredientsView.as_view(), name="ingredients"),
   path('ingredients/add', views.AddIngredientsView.as_view(), name="add_ingredient"),
   path('menu/', views.MenuView.as_view(), name="menu"),
+  path('menu/add', views.AddMenuItemView.as_view(), name="add_menu_item"),
   path('purchases', views.PurchasesView.as_view(), name="purchases"),
 ]
